@@ -1,0 +1,8 @@
+Requirements
+ * lxml (python-lxml package)
+ * genshi (python-genshi package)
+
+epub builder python library from
+	http://code.google.com/p/python-epub-builder/
+
+Just run butterfly/buildbook.py script and butterfly.epub will be generated.
