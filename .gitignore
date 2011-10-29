@@ -1,2 +1,6 @@
 *.pyc
 *.epub
+butterfly/[01]*
+butterfly/META-INF
+butterfly/OEBPS
+butterfly/mimetype

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import os, glob, sys
 
-dirname = os.path.dirname(__file__) or '.'
-epub_path = os.path.sep.join((dirname, '..', 'epub')) 
+basename = os.path.dirname(__file__) or '.'
+epub_path = os.path.sep.join((basename, '..', 'epub')) 
 print epub_path
 sys.path.append(epub_path)
 
@@ -19,10 +19,11 @@ book.authors = ['오트슨',]
 sections = []
 
 for dirname in range(1, 14):
-	dirname = '%02d'%dirname
+	dirname = os.path.sep.join((basename, '%02d'%dirname))
 	chapter = ''
 	paragraph = []
 	pattern = os.path.sep.join((dirname, '*'))
+	print pattern
 	for i, filename in enumerate(sorted(glob.glob(pattern))):
 		name, p = parse.get_chapter(filename, i == 0)
 		if i == 0:
