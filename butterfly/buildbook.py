@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 import os, glob, sys
 
+OUTNAME ='butterfly'
+
 basename = os.path.dirname(__file__) or '.'
 epub_path = os.path.sep.join((basename, '..', 'epub')) 
-print epub_path
 sys.path.append(epub_path)
 
 import ez_epub
+import epub
 import parse, source
 
 source.fetch()
@@ -23,7 +25,6 @@ for dirname in range(1, 14):
 	chapter = ''
 	paragraph = []
 	pattern = os.path.sep.join((dirname, '*'))
-	print pattern
 	for i, filename in enumerate(sorted(glob.glob(pattern))):
 		name, p = parse.get_chapter(filename, i == 0)
 		if i == 0:
@@ -50,5 +51,17 @@ for dirname in range(1, 14):
 	sections.append(section)
 
 book.sections = sections
-book.make('butterfly')
+book.make(OUTNAME)
+
+def apply_patch(patchfile):
+	import subprocess
+	patch = open(patchfile)
+	cmd = ('patch', '-p0', )
+	subprocess.Popen(cmd, stdin = patch, cwd = OUTNAME)
+
+patchpattern = os.path.sep.join((basename, "patches", "*"))
+for patch in (sorted(glob.glob(patchpattern))):
+	apply_patch(patch)
+
+epub.EpubBook.createArchive(OUTNAME, OUTNAME + '.epub')
 
