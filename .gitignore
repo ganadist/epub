@@ -1,6 +1,7 @@
 *.pyc
 *.epub
+*/META-INF
+*/OEBPS
+*/mimetype
 butterfly/[01]*
-butterfly/META-INF
-butterfly/OEBPS
-butterfly/mimetype
+dragon_of_esoril/source
