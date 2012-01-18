@@ -12,10 +12,13 @@ import parse
 
 def buildBook(filename):
 	basename = os.path.basename(filename)
-	OUTNAME = basename
+	WORKDIR = basename
 
 	data = parse.getData(filename)
 	TITLE, AUTHOR, SECTIONS = parse.parse(data)
+
+	OUTNAME = TITLE + '.epub'
+	OUTNAME = OUTNAME.replace('/', '／')
 
 	book = ez_epub.Book()
 	book.lang = 'ko-KR'
@@ -24,9 +27,11 @@ def buildBook(filename):
 	book.authors = [AUTHOR,]
 
 	book.sections = SECTIONS
-	book.make(OUTNAME)
+	book.make(WORKDIR)
 
-	epub.EpubBook.createArchive(OUTNAME, OUTNAME + '.epub')
+	epub.EpubBook.createArchive(WORKDIR, OUTNAME)
+
+	os.system('rm -rf ' + WORKDIR + " " + WORKDIR + '.epub')
 
 from xml.etree.ElementTree import ParseError
 
@@ -39,4 +44,4 @@ for filename in sys.argv[1:]:
 		buildBook(filename)
 	except ParseError, e:
 		print 'parse error', filename, e
-		break
+		continue
