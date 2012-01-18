@@ -17,8 +17,12 @@ def buildBook(filename):
 	data = parse.getData(filename)
 	TITLE, AUTHOR, SECTIONS = parse.parse(data)
 
-	OUTNAME = TITLE + '.epub'
-	OUTNAME = OUTNAME.replace('/', '／')
+	OUTDIR = AUTHOR.strip()
+
+	try:
+		os.makedirs(OUTDIR)
+	except:
+		pass
 
 	book = ez_epub.Book()
 	book.lang = 'ko-KR'
@@ -29,7 +33,12 @@ def buildBook(filename):
 	book.sections = SECTIONS
 	book.make(WORKDIR)
 
+
+	OUTNAME = os.path.sep.join(
+			(OUTDIR, TITLE.replace('/', '／') + '.epub'))
+
 	epub.EpubBook.createArchive(WORKDIR, OUTNAME)
+
 
 	os.system('rm -rf ' + WORKDIR + " " + WORKDIR + '.epub')
 
