@@ -11,6 +11,9 @@ import epub
 import parse
 
 def buildBook(filename):
+	basename = os.path.basename(filename)
+	OUTNAME = basename
+
 	data = parse.getData(filename)
 	TITLE, AUTHOR, SECTIONS = parse.parse(data)
 
@@ -21,15 +24,19 @@ def buildBook(filename):
 	book.authors = [AUTHOR,]
 
 	book.sections = SECTIONS
-	basename = os.path.basename(filename)
-	OUTNAME = basename
 	book.make(OUTNAME)
 
 	epub.EpubBook.createArchive(OUTNAME, OUTNAME + '.epub')
+
+from xml.etree.ElementTree import ParseError
 
 for filename in sys.argv[1:]:
 	if not os.access(filename, os.R_OK):
 		print filename, 'is not exist'
 		break
 
-	buildBook(filename)
+	try:
+		buildBook(filename)
+	except ParseError, e:
+		print 'parse error', filename, e
+		break
