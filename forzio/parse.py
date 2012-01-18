@@ -5,14 +5,7 @@ from StringIO import StringIO
 basename = os.path.dirname(__file__) or '.'
 epub_path = os.path.sep.join((basename, '..', 'epub')) 
 sys.path.append(epub_path)
-
 import ez_epub
-
-def openFile(filename):
-	buf = open(filename).read()
-	buf = buf.replace('EUC-KR', 'UTF-8')
-	buf = buf.decode('cp949').encode('utf-8')
-	return StringIO(buf)
 
 tokenmap = {
 	'gt': '>',
@@ -23,44 +16,52 @@ tokenmap = {
 	'amp': '&',
 }
 
+PAGEBREAK = '!@#page break#@!'
+
 def subst(matchobj):
 	token = matchobj.group(0)[1:-1].lower()
 	if token in tokenmap:
 		return tokenmap[token]
 	if token.startswith('#'):
-		return unichr(int(token[1:])).encode('utf-8')
+		return unichr(int(token[1:])).encode('UTF-8')
 	return ' '
+
+def openFile(filename):
+	buf = open(filename).read()
+	buf = buf.replace('EUC-KR', 'UTF-8')
+	buf = buf.decode('CP949').encode('UTF-8')
+	buf = re.sub('&(#\d+|gt|lt|apos|quot|nbsp|amp);', subst, buf, flags=re.IGNORECASE)
+	return StringIO(buf)
 
 def getData(filename):
 	p = ElementTree.parse(openFile(filename))
 	r = p.getroot()
-	d = r.find('Book').find('bookData')
+	data = r.find('Book').find('bookData').text
 	title = r.find('Book').find('btitle').text
 	author = r.find('Book').find('bwriter').text
-	return title, author, d.text
-
-def feed(data):
-	for line in data:
-		line = re.sub('&(#\d+|gt|lt|apos|quot|nbsp|amp);', subst, line, flags=re.IGNORECASE)
-		yield line
-
-def createSection():
-	return ez_epub.Section()
+	return title, author, data
 
 def parseChapter(source):
-	section = createSection()
-	title = ''
+	section = ez_epub.Section()
 	p = []
+
 	for line in source:
-		if not line.strip():
+		line = line.strip()
+		if not line:
 			continue
-		if line.startswith('!@#page break#@!'):
+		if line.startswith(PAGEBREAK):
 			break
-		if not title:
-			title = line.strip()
-			section.title = title
+		section.title = line
+		break
+
+	for line in source:
+		line = line.strip()
+		if not line:
 			continue
-		p += [('', line.strip())]
+		if line.startswith(PAGEBREAK):
+			break
+		p += [('', line)]
+
 	if not p:
 		return
 	section.text = p
@@ -69,16 +70,17 @@ def parseChapter(source):
 def parse(data):
 	title, author, text = data
 
-	source = feed(StringIO(text))
-	pagebreak = 0
+	source = StringIO(text)
+	break_count = 0
 
 	# parse head
 	for line in source:
-		if not line.strip():
+		line = line.strip()
+		if not line:
 			continue
-		if line.startswith('!@#page break#@!'):
-			pagebreak += 1
-			if pagebreak == 2:
+		if line.startswith(PAGEBREAK):
+			break_count += 1
+			if break_count == 2:
 				break
 			continue
 	

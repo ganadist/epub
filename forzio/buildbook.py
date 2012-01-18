@@ -36,6 +36,7 @@ def buildBook(filename):
 
 	OUTNAME = os.path.sep.join(
 			(OUTDIR, TITLE.replace('/', '／') + '.epub'))
+	print 'write', OUTNAME, 'from', filename
 
 	epub.EpubBook.createArchive(WORKDIR, OUTNAME)
 
