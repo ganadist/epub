@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, re
 from xml.etree import ElementTree
 from StringIO import StringIO
 
@@ -14,6 +14,22 @@ def openFile(filename):
 	buf = buf.decode('cp949').encode('utf-8')
 	return StringIO(buf)
 
+tokenmap = {
+	'gt': '>',
+	'lt': '<',
+	'nbsp': ' ',
+	'apos': "'",
+	'quot': '"',
+	'amp': '&',
+}
+
+def subst(matchobj):
+	token = matchobj.group(0)[1:-1]
+	if token in tokenmap:
+		return tokenmap[token]
+	if token.startswith('#'):
+		return unichr(int(token[1:])).encode('utf-8')
+	return ' '
 
 def getData(filename):
 	p = ElementTree.parse(openFile(filename))
@@ -23,6 +39,7 @@ def getData(filename):
 
 def feed(data):
 	for line in data:
+		line = re.sub('&(#\d+|gt|lt|apos|quot|nbsp|amp);', subst, line)
 		yield line
 
 def createSection():
