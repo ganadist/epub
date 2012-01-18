@@ -17,6 +17,7 @@ def buildBook(filename):
 	book = ez_epub.Book()
 	book.lang = 'ko-KR'
 	book.title = TITLE
+	book.cover = os.path.splitext(filename)[0] + '.jpg'
 	book.authors = [AUTHOR,]
 
 	book.sections = SECTIONS
