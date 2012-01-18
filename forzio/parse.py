@@ -35,7 +35,9 @@ def getData(filename):
 	p = ElementTree.parse(openFile(filename))
 	r = p.getroot()
 	d = r.find('Book').find('bookData')
-	return d.text
+	title = r.find('Book').find('btitle').text
+	author = r.find('Book').find('bwriter').text
+	return title, author, d.text
 
 def feed(data):
 	for line in data:
@@ -64,9 +66,8 @@ def parseChapter(source):
 	section.text = p
 	return section
 
-def parse(text):
-	title = ''
-	author = ''
+def parse(data):
+	title, author, text = data
 
 	source = feed(StringIO(text))
 	pagebreak = 0
@@ -79,12 +80,6 @@ def parse(text):
 			pagebreak += 1
 			if pagebreak == 2:
 				break
-			continue
-		if not title:
-			title = line.strip()
-			continue
-		if not author:
-			author = line.strip()
 			continue
 	
 	sections = []
