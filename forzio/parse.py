@@ -24,7 +24,7 @@ tokenmap = {
 }
 
 def subst(matchobj):
-	token = matchobj.group(0)[1:-1]
+	token = matchobj.group(0)[1:-1].lower()
 	if token in tokenmap:
 		return tokenmap[token]
 	if token.startswith('#'):
@@ -39,7 +39,7 @@ def getData(filename):
 
 def feed(data):
 	for line in data:
-		line = re.sub('&(#\d+|gt|lt|apos|quot|nbsp|amp);', subst, line)
+		line = re.sub('&(#\d+|gt|lt|apos|quot|nbsp|amp);', subst, line, flags=re.IGNORECASE)
 		yield line
 
 def createSection():
@@ -68,7 +68,7 @@ def parse(text):
 	title = ''
 	author = ''
 
-	source = StringIO(text)
+	source = feed(StringIO(text))
 	pagebreak = 0
 
 	# parse head
