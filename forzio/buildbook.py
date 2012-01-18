@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os, glob, sys
+from multiprocessing import Pool
 
 basename = os.path.dirname(__file__) or '.'
 epub_path = os.path.sep.join((basename, '..', 'epub')) 
@@ -11,11 +12,19 @@ import epub
 import parse
 
 def buildBook(filename):
+	if not os.access(filename, os.R_OK):
+		print filename, 'is not exist'
+		return
+
 	basename = os.path.basename(filename)
 	WORKDIR = basename
 
-	data = parse.getData(filename)
-	TITLE, AUTHOR, SECTIONS = parse.parse(data)
+	try:
+		data = parse.getData(filename)
+		TITLE, AUTHOR, SECTIONS = parse.parse(data)
+	except ParseError, e:
+		print 'parse error', filename, e
+		return
 
 	OUTDIR = AUTHOR.strip()
 
@@ -45,13 +54,7 @@ def buildBook(filename):
 
 from xml.etree.ElementTree import ParseError
 
-for filename in sys.argv[1:]:
-	if not os.access(filename, os.R_OK):
-		print filename, 'is not exist'
-		break
+pool = Pool(os.sysconf("SC_NPROCESSORS_ONLN"))
 
-	try:
-		buildBook(filename)
-	except ParseError, e:
-		print 'parse error', filename, e
-		continue
+pool.map(buildBook, sys.argv[1:])
+

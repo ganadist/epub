@@ -74,7 +74,7 @@ def parse(data):
 	source = feed(StringIO(text))
 	break_count = 0
 
-	# parse head
+	# skip head
 	for line in source:
 		if line.startswith(PAGEBREAK):
 			break_count += 1
