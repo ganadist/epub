@@ -46,18 +46,12 @@ def parseChapter(source):
 	p = []
 
 	for line in source:
-		line = line.strip()
-		if not line:
-			continue
 		if line.startswith(PAGEBREAK):
 			break
 		section.title = line
 		break
 
 	for line in source:
-		line = line.strip()
-		if not line:
-			continue
 		if line.startswith(PAGEBREAK):
 			break
 		p += [('', line)]
@@ -67,17 +61,21 @@ def parseChapter(source):
 	section.text = p
 	return section
 
+def feed(data):
+	for line in data:
+		line = line.strip()
+		if not line:
+			continue
+		yield line
+
 def parse(data):
 	title, author, text = data
 
-	source = StringIO(text)
+	source = feed(StringIO(text))
 	break_count = 0
 
 	# parse head
 	for line in source:
-		line = line.strip()
-		if not line:
-			continue
 		if line.startswith(PAGEBREAK):
 			break_count += 1
 			if break_count == 2:
