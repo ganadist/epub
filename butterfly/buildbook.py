@@ -59,9 +59,9 @@ def apply_patch(patchfile):
 	cmd = ('patch', '-p0', )
 	subprocess.Popen(cmd, stdin = patch, cwd = OUTNAME)
 
-patchpattern = os.path.sep.join((basename, "patches", "*"))
-for patch in (sorted(glob.glob(patchpattern))):
-	apply_patch(patch)
+#patchpattern = os.path.sep.join((basename, "patches", "*"))
+#for patch in (sorted(glob.glob(patchpattern))):
+#	apply_patch(patch)
 
 epub.EpubBook.createArchive(OUTNAME, OUTNAME + '.epub')
 
