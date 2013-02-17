@@ -1,33 +1,58 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:py="http://genshi.edgewall.org/">
+    xmlns:py="http://genshi.edgewall.org/"
+	xmlns:xi="http://www.w3.org/2001/XInclude" >
 <head>
   <title>${section.title}</title>
   <style type="text/css">
 h1 { text-align: center; }
 ${section.css}
   </style>
+  <!--
+  <style type="text/css" media="screen">
+  	<xi:include href="bootstrap/css/bootstrap.min.css" parse="text" />
+  	<xi:include href="bootstrap/css/bootstrap-responsive.min.css" parse="text" />
+  </style>
+  -->
 </head>
 <body>
   <h1>${section.title}</h1>
   <py:for each="paragraph in section.text">
-    <py:choose test="type(paragraph)">
-      <py:when test="type([])">
-<p>
-		<py:choose test="className" py:for="text, className in paragraph">
-          <py:when test="''">$text</py:when>
-		  <py:otherwise><span class="$className">$text</span></py:otherwise></py:choose>
-</p>
-      </py:when>
-      <py:when test="type({})">
-<p py:attrs="paragraph">${paragraph.get("text")}</p>
-      </py:when>
-      <py:when test="type(None)">
-<div style="page-break-before:always;"></div>
-      </py:when>
-      <py:otherwise>
-<p>$paragraph</p>
-      </py:otherwise>
-    </py:choose>
+<?python
+from genshi.builder import Element
+def buildElement(paragraph):
+  #print repr(paragraph)
+  if paragraph is None:
+    return Element('div', style='page-break-before:always;')
+  elif isinstance(paragraph, (str, unicode)):
+    return Element('p')(paragraph)
+  elif isinstance(paragraph, (tuple, list)):
+    p = []
+    for text, className in paragraph:
+      if className:
+        text = Element('span', class_=className)(text)
+      p.append(Element('p')(text))
+    return p
+  elif isinstance(paragraph, dict):
+    paragraph = paragraph.copy()
+    def pop(x, key, default):
+      if key in x:
+        return x.pop(key)
+      return default
+    tag = pop(paragraph, 'tag', 'p')
+    children = pop(paragraph, 'children', [])
+    if children:
+	  text = map(buildElement, children)
+    else:
+      text = pop(paragraph, 'text', '')
+    return Element(tag, **paragraph)(text)
+  else:
+    return Element('p')(paragraph)
+?>
+${buildElement(paragraph)}
   </py:for>
+  <!--
+  <script type="text/javascript" src="jquery/jquery.js" />
+  <script type="text/javascript" src="bootstrap/js/bootstrap.js" />
+  -->
 </body>
 </html>
