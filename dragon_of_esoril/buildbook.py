@@ -23,9 +23,11 @@ sections = []
 paragraph = []
 pattern = os.path.sep.join((basename, 'source', '*'))
 for filename in sorted(glob.glob(pattern)):
-	for line in parse.get_paragraph(filename):
-		paragraph.append((line.text.replace('&lt;', '<').replace('&gt;', '>') or '', ''))
-		paragraph.append(('\n', ''))
+    for line in parse.get_paragraph(filename):
+        para = line.text.replace('&lt;', '<').replace('&gt;', '>') or ''
+        if para == '*':
+            para = None
+        paragraph.append(para)
 
 section = ez_epub.Section()
 section.text = paragraph
