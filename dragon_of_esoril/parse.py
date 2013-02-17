@@ -1,10 +1,10 @@
-import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 def get_paragraph(filename):
-	b = BeautifulSoup.BeautifulSoup(open(filename))
+	b = BeautifulSoup(open(filename))
 	contents = b.findChild(attrs={'name':'navercast_div'})
 	def x(item):
-		return isinstance(item, BeautifulSoup.Tag)
+		return isinstance(item, Tag)
 	# filter string
 	contents = filter(x, contents)
 	return contents
