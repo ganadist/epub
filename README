@@ -1,7 +1,7 @@
 Requirements
  * lxml (python-lxml package)
  * genshi (python-genshi package)
- * beautifulsoup (python-beautifulsoup package)
+ * beautifulsoup4 (python-bs4 package)
 
 epub builder python library from
 	http://code.google.com/p/python-epub-builder/
