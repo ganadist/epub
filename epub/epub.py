@@ -57,6 +57,7 @@ class EpubBook:
         self.imageItems = {}
         self.htmlItems = {}
         self.cssItems = {}
+        self.jsItems = {}
 
         self.coverImage = None
         self.titlePage = None
@@ -99,9 +100,12 @@ class EpubBook:
 
     def getCssItems(self):
         return sorted(self.cssItems.values(), key = lambda x : x.id)
-    
+
+    def getJsItems(self):
+        return sorted(self.jsItems.values(), key = lambda x : x.id)
+
     def getAllItems(self):
-        return sorted(itertools.chain(self.imageItems.values(), self.htmlItems.values(), self.cssItems.values()), key = lambda x : x.id)
+        return sorted(itertools.chain(self.imageItems.values(), self.htmlItems.values(), self.cssItems.values(), self.jsItems.values()), key = lambda x : x.id)
         
     def addImage(self, srcPath, destPath):
         item = EpubItem()
@@ -139,7 +143,18 @@ class EpubBook:
         assert item.destPath not in self.cssItems
         self.cssItems[item.destPath] = item
         return item
-    
+
+    def addJs(self, srcPath, destPath, html):
+        item = EpubItem()
+        item.id = 'js_%d' % (len(self.jsItems) + 1)
+        item.srcPath = srcPath
+        item.destPath = destPath
+        item.html = html
+        item.mimeType = 'text/javascript'
+        assert item.destPath not in self.jsItems
+        self.jsItems[item.destPath] = item
+        return item
+
     def addCover(self, srcPath):
         assert not self.coverImage
         _, ext = os.path.splitext(srcPath)
@@ -247,7 +262,11 @@ class EpubBook:
         for item in self.getAllItems():
             print item.id, item.destPath
             if item.html:
-                fout = open(os.path.join(self.rootDir, 'OEBPS', item.destPath), 'w')
+                foutname = os.path.join(self.rootDir, 'OEBPS', item.destPath)
+                dirname = os.path.dirname(foutname)
+                if not os.path.isdir(dirname):
+                    os.makedirs(dirname)
+                fout = open(foutname, 'w')
                 fout.write(item.html)
                 fout.close()
             else:
