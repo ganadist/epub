@@ -27,6 +27,7 @@ def get_chapter(filename, isFirst = False):
 
     found_chapter = False
     found_quote = False
+    quote = []
 
     chapter = ''
     p = []
@@ -49,11 +50,18 @@ def get_chapter(filename, isFirst = False):
             # find quote
             if line.strip():
                 if line[2:].startswith(unichr(0xa0) * 10):
-                    p.append([(line.strip(), 'from')])
+                    p.append({
+                        'tag': 'blockquote',
+                        'children': quote,
+                    })
+                    p.append({
+                        'text':line.strip(),
+                        'class':'text-right'
+                    })
                     p.append(None) # page break
                     found_quote = True
                     continue
-            p.append([(line.strip(), 'quote')])
+                quote.append(line.strip())
             continue
 
         if line.strip().startswith('--------'):

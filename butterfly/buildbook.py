@@ -34,19 +34,7 @@ for dirname in range(1, 14):
 	section = ez_epub.Section()
 	section.title = chapter
 	section.text = paragraph
-	section.css = """
-		.quote { 
-			font-style: italic; 
-			padding-left: 24px;
-		}
-		.from {
-			font-style: bold;
-			text-align: left;
-			margin-left: 80px;
-			margin-top: 80px;
-			margin-bottom: 100px;
-		}
-		"""
+	section.css = ""
 	#print section.text[:4]
 	sections.append(section)
 
