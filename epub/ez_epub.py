@@ -1,6 +1,9 @@
 import epub
 from genshi.template import TemplateLoader
 
+import os
+basedir = os.path.dirname(__file__) or '.'
+
 class Section:
 
     def __init__(self):
@@ -46,6 +49,9 @@ class Book:
             self.impl.addCover(self.cover)
         self.impl.addTitlePage()
         self.impl.addTocPage()
+        jsfiles = ('jquery/jquery.js', 'bootstrap/js/bootstrap.js')
+        for js in jsfiles:
+            self.impl.addJs('', js, open(os.path.join(basedir, 'templates', js)).read())
         root = Section()
         root.subsections = self.sections
         self.__addSection(root, 's', 0)
