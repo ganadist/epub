@@ -3,7 +3,7 @@
 <head>
   <title>${book.title}</title>
   <style type="text/css">
-.title, .authors {
+.title, .subtitle, .authors {
   text-align: center;
 }
 span.author {
@@ -13,6 +13,7 @@ span.author {
 </head>
 <body>
   <h1 class="title">${book.title}</h1>
+  <h2 class="subtitle">${book.subtitle}</h2>
   <h3 class="authors">
   <py:for each="creator, _ in book.creators">
   <span class="author">$creator</span>

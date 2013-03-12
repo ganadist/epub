@@ -18,6 +18,7 @@ class Book:
     def __init__(self):
         self.impl = epub.EpubBook()
         self.title = ''
+        self.subtitle = ''
         self.authors = []
         self.cover = ''
         self.lang = 'en-US'
@@ -42,6 +43,7 @@ class Book:
         outputFile = outputDir + '.epub'
         
         self.impl.setTitle(self.title)
+        self.impl.setSubtitle(self.subtitle)
         self.impl.setLang(self.lang)
         for author in self.authors:
             self.impl.addCreator(author)

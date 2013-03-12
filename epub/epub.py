@@ -51,6 +51,7 @@ class EpubBook:
 
         self.lang = 'en-US'
         self.title = ''
+        self.subtitle = ''
         self.creators = []
         self.metaInfo = []
 
@@ -67,9 +68,12 @@ class EpubBook:
         self.guide = {}
         self.tocMapRoot = TocMapNode()
         self.lastNodeAtDepth = {0 : self.tocMapRoot}
-        
+
     def setTitle(self, title):
         self.title = title
+
+    def setSubtitle(self, title):
+        self.subtitle = title
     
     def setLang(self, lang):
         self.lang = lang
