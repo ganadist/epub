@@ -51,8 +51,8 @@ def buildElement(paragraph):
     for text, className in paragraph:
       if className:
         text = Element('span', class_=className)(text)
-      p.append(Element('p')(text))
-    return p
+      p.append(text)
+    return Element('p')(*p)
   elif isinstance(paragraph, dict):
     paragraph = paragraph.copy()
     def pop(x, key, default):
