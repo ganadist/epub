@@ -41,10 +41,9 @@ ${section.css}
 <?python
 from genshi.builder import Element
 def buildElement(paragraph):
-  #print repr(paragraph)
-  if paragraph is None:
+  if repr(paragraph) == 'None':
     return Element('div', style='page-break-before:always;')
-  elif isinstance(paragraph, (str, unicode)):
+  elif isinstance(paragraph, (type('a'), type(u'a'))):
     return Element('p')(paragraph)
   elif isinstance(paragraph, (tuple, list)):
     p = []
@@ -62,7 +61,7 @@ def buildElement(paragraph):
     tag = pop(paragraph, 'tag', 'p')
     children = pop(paragraph, 'children', [])
     if children:
-	  text = map(buildElement, children)
+      text = map(buildElement, children)
     else:
       text = pop(paragraph, 'text', '')
     return Element(tag, **paragraph)(text)

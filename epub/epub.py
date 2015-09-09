@@ -264,7 +264,6 @@ class EpubBook:
     
     def __writeItems(self):
         for item in self.getAllItems():
-            print item.id, item.destPath
             if item.html:
                 foutname = os.path.join(self.rootDir, 'OEBPS', item.destPath)
                 dirname = os.path.dirname(foutname)
