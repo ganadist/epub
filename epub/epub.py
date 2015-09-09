@@ -306,7 +306,7 @@ class EpubBook:
     @staticmethod
     def checkEpub(checkerPath, epubPath):
         #subprocess.call(['java', '-jar', checkerPath, epubPath], shell = True)
-		pass
+        pass
     
     def createBook(self, rootDir):
         if self.titlePage:
