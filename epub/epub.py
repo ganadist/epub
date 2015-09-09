@@ -10,6 +10,10 @@ import zipfile
 from genshi.template import TemplateLoader
 from lxml import etree
 
+# monkeypatch
+from genshi.template import astutil
+astutil.ASTCodeGenerator.visit_NameConstant = lambda self, x: None
+
 class TocMapNode:
     
     def __init__(self):
