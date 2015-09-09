@@ -12,5 +12,5 @@ def get_paragraph(filename):
 if __name__ == '__main__':
 	import sys
 	for i, filename in enumerate(sys.argv[1:]):
-		print get_paragraph(filename)
+		print(get_paragraph(filename))
 

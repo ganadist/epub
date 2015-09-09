@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os, glob, sys
+if sys.version_info[0] == 2:
+  reload(sys)
+  sys.setdefaultencoding('utf8')
 
 OUTNAME ='butterfly'
 
@@ -35,7 +38,7 @@ for dirname in range(1, 14):
 	section.title = chapter
 	section.text = paragraph
 	section.css = ""
-	#print section.text[:4]
+	#print(section.text[:4])
 	sections.append(section)
 
 book.sections = sections

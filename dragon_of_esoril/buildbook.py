@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os, glob, sys
+if sys.version_info[0] == 2:
+  reload(sys)
+  sys.setdefaultencoding('utf8')
 
 OUTNAME ='dragon_of_esoril'
 
 basename = os.path.dirname(__file__) or '.'
-epub_path = os.path.sep.join((basename, '..', 'epub')) 
+epub_path = os.path.join(basename, '..', 'epub')
 sys.path.append(epub_path)
 
 import ez_epub

@@ -1,3 +1,4 @@
+from __future__ import print_function
 BASEURL="http://drwk.com/pimangboard/read.php?code=serial&sidx=1000024"
 
 SOURCES=[
@@ -89,20 +90,20 @@ def fetch():
 	basedir = os.path.dirname(__file__) or '.'
 	for i, chapter in enumerate(SOURCES):
 
-		dirname = os.path.sep.join((basedir, "%02d"%(i+1)))
+		dirname = os.path.join(basedir, "%02d"%(i+1))
 		if not os.path.isdir(dirname):
 			os.makedirs(dirname)
 		for j, item in enumerate(chapter):
 			id = item[0]
 			url = get_url(id)
-			filename = os.path.sep.join((dirname, '%02d'%(j+1)))
+			filename = os.path.join(dirname, '%02d'%(j+1))
 			if os.path.isfile(filename):
-				print 'skip ', url
+				print('skip ', url)
 				continue
-			print 'fetching from', url
+			print('fetching from', url)
 			u = urllib.urlopen(url)
 			s = u.read()
-			print >>open(filename, "w"), s
+			print(s, file=open(filename, "w"))
 
 if __name__ == '__main__':
 	fetch()

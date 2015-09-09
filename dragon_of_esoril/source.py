@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 BASEURL="http://data.navercast.naver.com/literature_module/30/"
 
 def get_url(id):
@@ -13,12 +15,12 @@ def fetch():
 		filename = os.path.sep.join((dirname, "%02d"%i))
 		url = get_url(i)
 		if os.path.isfile(filename):
-			print 'skip', url
+			print('skip', url)
 			continue
-		print 'fetching from', url
+		print('fetching from', url)
 		u = urllib.urlopen(url)
 		s = u.read()
-		print >>open(filename, "w"), s
+		print(s, file=open(filename, "w"))
 
 if __name__ == '__main__':
 	fetch()
